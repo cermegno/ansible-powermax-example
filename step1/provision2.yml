@@ -1,0 +1,21 @@
+- name: Provisioning storage for Powermax
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Create Storage group
+      dellemc_powermax_storagegroup:
+        serial_no: "000297123456"
+        unispherehost: "192.168.1.1"
+        universion: "90"
+        verifycert: false
+        user: "smc"
+        password: "s3cr3t"
+        sg_name: "mySG"
+        service_level: "Diamond"
+        compression: True
+        srp: "SRP_1"
+        state: 'present'
+
+

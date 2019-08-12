@@ -1,0 +1,6 @@
+---
+# Variables file in the same folder as the playbook
+serial_no: "000297123456"
+unispherehost: "192.168.1.1"
+universion: "90"
+verifycert: false

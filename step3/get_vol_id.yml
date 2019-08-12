@@ -1,0 +1,34 @@
+- name: Provisioning storage for Powermax
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - conn3456.yml
+    - creds.yml
+
+  vars:
+    # Let's define an alias for all the repetitive stuff by prepending '&'
+    input: &uni_connection_vars
+      serial_no: "{{ serial_no }}"
+      password: "{{ password }}"
+      unispherehost: "{{ unispherehost }}"
+      universion: "{{ universion }}"
+      user: "{{ user }}"
+      verifycert: "{{ verifycert }}"
+
+  tasks:
+
+##################################
+# Volume deletion requires to specify the vol_id instead of the vol_name
+# We can do this to find it out 
+    - name: Get volume properties
+      dellemc_powermax_volume:
+        # Now we access the alias with *. The '<<' is the merge operator
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        vol_name: "DB"
+# Not sure if need to pass "state". I don't see why
+        state: "present"
+        register: result
+      debug:
+        msg: "{{ result.volume_details.volumeID }}"

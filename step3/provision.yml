@@ -1,0 +1,34 @@
+- name: Provisioning storage for Powermax
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - conn3456.yml
+    - creds.yml
+
+  vars:
+    input: &uni_connection_vars
+      user: "{{ user }}"
+      password: "{{ password }}"
+      serial_no: "{{ serial_no }}"
+      unispherehost: "{{ unispherehost }}"
+      universion: "{{ universion }}"
+      verifycert: "{{ verifycert }}"
+
+  tasks:
+    - name: Create Storage group
+      dellemc_powermax_storagegroup:
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        service_level: "Diamond"
+        state: 'present'
+    - name: Create volume
+      dellemc_powermax_volume:
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        vol_name: "DB"
+        size: 2
+        cap_unit: "GB"
+        state: "present"
+        vol_state: "present-in-group"
+

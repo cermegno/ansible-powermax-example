@@ -1,0 +1,47 @@
+- name: Provisioning storage for Powermax
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - conn3456.yml
+    - creds.yml
+
+  vars:
+    input: &uni_connection_vars
+      serial_no: "{{ serial_no }}"
+      password: "{{ password }}"
+      unispherehost: "{{ unispherehost }}"
+      universion: "{{ universion }}"
+      user: "{{ user }}"
+      verifycert: "{{ verifycert }}"
+
+  tasks:
+
+##################################
+# Volume deletion requires to specify the vol_id instead of the vol_name
+# So we might have to do first 
+    - name: Get volume properties
+      dellemc_powermax_volume:
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        vol_name: "DB"
+# Not sure if need to pass "state". I don't see why
+        state: "present"
+        register: result
+
+    - name: Delete volume
+      dellemc_powermax_volume:
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        vol_id: "{{ result.volume_details.volumeID }}"
+#        vol_name: "DB"
+        state: "absent"
+        vol_state: "absent-in-group"
+
+# It seems logical that I would have to delete the volume first. Hence we do this last
+    - name: Delete Storage group
+      dellemc_powermax_storagegroup:
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        state: 'absent'
+

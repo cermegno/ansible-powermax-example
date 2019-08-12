@@ -1,0 +1,37 @@
+# Variable File Containing request details
+---
+
+mv_name: Ansible_DEMO_Cluster_MV
+sg_name: Ansible_DEMO_SG
+volume_list:
+  - vol_name: DATA
+    size: 1
+    cap_unit: GB
+  - vol_name: REDO
+    size: 1
+    cap_unit: GB
+  - vol_name: TEMP
+    size: 1
+    cap_unit: GB
+  - vol_name: FRA
+    size: 1
+    cap_unit: GB
+
+# Section that contains the host details
+hostgroup_name: Ansible_DEMO_Cluster
+host1_name: Ansible_DEMO_Host1
+host1_initiators:
+  - 10000000c98ffaee
+  - 10000000c98ffaef
+host2_name: Ansible_DEMO_Host2
+host2_initiators:
+  - 10000000c98ffffe
+  - 10000000c98ffafe
+
+# Section  with ports and Port Group Definition. 
+portgroup_name: Ansible_DEMO_PG
+port_list:
+  - director_id: FA-1D
+    port_id: 8
+  - director_id: FA-2D
+    port_id: 8
