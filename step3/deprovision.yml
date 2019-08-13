@@ -25,23 +25,18 @@
         <<: *uni_connection_vars
         sg_name: "mySG"
         vol_name: "DB"
-# Not sure if need to pass "state". I don't see why
         state: "present"
-        register: result
+      register: result
 
-    - name: Delete volume
-      dellemc_powermax_volume:
-        <<: *uni_connection_vars
-        sg_name: "mySG"
-        vol_id: "{{ result.volume_details.volumeID }}"
-#        vol_name: "DB"
-        state: "absent"
-        vol_state: "absent-in-group"
-
-# It seems logical that I would have to delete the volume first. Hence we do this last
     - name: Delete Storage group
       dellemc_powermax_storagegroup:
         <<: *uni_connection_vars
         sg_name: "mySG"
         state: 'absent'
 
+    - name: Delete volume
+      dellemc_powermax_volume:
+        <<: *uni_connection_vars
+        sg_name: "mySG"
+        vol_id: "{{ result.volume_details.volumeID }}"
+        state: "absent"
