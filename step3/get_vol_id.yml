@@ -27,8 +27,8 @@
         <<: *uni_connection_vars
         sg_name: "mySG"
         vol_name: "DB"
-# Not sure if need to pass "state". I don't see why
         state: "present"
-        register: result
-      debug:
-        msg: "{{ result.volume_details.volumeID }}"
+      register: result
+    - debug:
+        #msg: "{{ result }}"
+        msg: "{{ result.volume_details.volumeId }}"
