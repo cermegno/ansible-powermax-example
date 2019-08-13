@@ -19,7 +19,6 @@
 
 ##################################
 # Volume deletion requires to specify the vol_id instead of the vol_name
-# So we might have to do first 
     - name: Get volume properties
       dellemc_powermax_volume:
         <<: *uni_connection_vars
