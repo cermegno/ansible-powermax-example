@@ -29,4 +29,4 @@
         size: 1
         cap_unit: "GB"
         state: "present"
-        vol_state: "present-in-group"
+        
