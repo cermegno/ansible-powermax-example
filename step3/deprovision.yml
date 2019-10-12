@@ -37,5 +37,5 @@
       dellemc_powermax_volume:
         <<: *uni_connection_vars
         sg_name: "mySG"
-        vol_id: "{{ result.volume_details.volumeID }}"
+        vol_id: "{{ result.volume_details.volumeId }}"
         state: "absent"
