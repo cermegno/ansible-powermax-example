@@ -5,6 +5,7 @@
   vars_files:
     - conn3456.yml
     - creds.yml
+    - req142432-oracle-erp.yml
 
   vars:
     mv_name: "{{ mv_name }}"
@@ -21,7 +22,18 @@
       verifycert: "{{ verifycert }}"
 
   tasks:
-    - name: Delete MV "{{ mv_name }}" 
+    - name: Collect SG details
+      dellemc_powermax_storagegroup:
+        <<: *uni_connection_vars
+        sg_name: "{{ sg_name }}"
+        service_level: "Diamond"
+        state: 'present'
+      register: storage_details
+
+    -  set_fact:
+        all_volumes_Id: "{{ storage_details.storage_group_volumes | list }}"
+
+    - name: Delete MV "{{ mv_name }}"
       dellemc_powermax_maskingview:
         <<: *uni_connection_vars
         mv_name: "{{ mv_name }}"
@@ -29,7 +41,7 @@
         hostgroup_name: "{{ hostgroup_name }}"
         sg_name: "{{ sg_name }}"
         state: 'absent'
-        
+
     - name: Delete Storage group
       dellemc_powermax_storagegroup:
         <<: *uni_connection_vars
@@ -38,7 +50,12 @@
         srp: "SRP_1"
         state: 'absent'
 
-#### This script is not deleting the Volumes that got created
+    -  name: Delete all the volumes
+       dellemc_powermax_volume:
+        <<: *uni_connection_vars
+        vol_id: "{{ item }}"
+        state: 'absent'
+       loop: "{{ all_volumes_Id }}"
 
     - name: Delete host group "{{ hostgroup_name }}"
       dellemc_powermax_hostgroup:
@@ -48,8 +65,8 @@
         hosts:
           - "{{ host1_name }}"
           - "{{ host2_name }}"
-        host_state: 'present-in-group'    
-        
+        host_state: 'present-in-group'
+
     - name: Delete host "{{ host1_name }}"
       dellemc_powermax_host:
         <<: *uni_connection_vars
@@ -57,7 +74,7 @@
         initiators: "{{ host1_initiators }}"
         state: 'absent'
         initiator_state: 'present-in-host'
-    
+
     - name: Delete host "{{ host2_name }}"
       dellemc_powermax_host:
         <<: *uni_connection_vars
@@ -73,7 +90,3 @@
         state: "absent"
         ports:  "{{ port_list }}"
         port_state: 'present-in-group'
-
-
-
-
