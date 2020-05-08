@@ -5,6 +5,7 @@
   vars_files:
     - conn3456.yml
     - creds.yml
+    - req142432-oracle-erp.yml
 
   vars:
     mv_name: "{{ mv_name }}"
@@ -28,13 +29,13 @@
         service_level: "Diamond"
         state: 'present'
         
-#    - name: Create new volumes for existing SG
-#      dellemc_powermax_storagegroup:
-#        <<: *uni_connection_vars
-#        sg_name: "{{ sg_name }}"
-#        state: "present"
-#        volumes: "{{ volume_list }}"
-#        vol_state: "present-in-group"
+    - name: Create new volumes for existing SG
+      dellemc_powermax_storagegroup:
+        <<: *uni_connection_vars
+        sg_name: "{{ sg_name }}"
+        state: "present"
+        volumes: "{{ volume_list }}"
+        vol_state: "present-in-group"
 
     - name: Create host "{{ host1_name }}"
       dellemc_powermax_host:
